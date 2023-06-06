@@ -9,7 +9,7 @@ type Props = {
 export function DaoCard({ name, icon, id }: Props) {
   return (
     <a
-      className="block border rounded-xl p-8 w-[223px] text-center cursor-pointer hover:border-current"
+      className="block border rounded-xl p-8 w-[223px] text-center hover:border-current"
       href={`/${id}`}
     >
       <Image src={icon} width={82} height={82} className="rounded-full mx-auto" alt="icon" />
