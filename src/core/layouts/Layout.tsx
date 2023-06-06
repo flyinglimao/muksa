@@ -18,7 +18,7 @@ const Layout: BlitzLayout<{ title?: string; children?: React.ReactNode }> = ({
       <VenomProvider>
         <Header />
         <Nav spaces={[]} />
-        {children}
+        <div className="py-12">{children}</div>
       </VenomProvider>
     </>
   )

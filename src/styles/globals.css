@@ -9,3 +9,7 @@ body {
 * {
   box-sizing: border-box;
 }
+
+body {
+  padding-left: 60px;
+}
