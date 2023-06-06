@@ -9,7 +9,7 @@ const Home: BlitzPage = () => {
   const id = "1"
   return (
     <Layout title="Home">
-      <div className="max-w-screen-lg mx-auto flex flex-wrap justify-between gap-8">
+      <div className="max-w-screen-lg mx-auto flex flex-wrap justify-between gap-8 items-start">
         <div className="border rounded-xl p-8 w-[260px] text-center">
           <Image src={icon} width={82} height={82} className="rounded-full mx-auto" alt="icon" />
           <h3 className="my-4 font-medium text-lg">{name}</h3>
@@ -31,6 +31,8 @@ const Home: BlitzPage = () => {
           </p>
         </div>
         <div className="flex-1 flex flex-col gap-4">
+          <ProposalCard />
+          <ProposalCard />
           <ProposalCard />
           <ProposalCard />
           <ProposalCard />

@@ -1,7 +1,11 @@
 export function ProposalCard() {
   return (
-    <a className="block p-8 rounded-xl border hover:border-current" href={"./1"}>
-      <h4 className="font-medium text-ellipsis mb-2">Proposal#1 Title...</h4>
+    <a className="block p-8 rounded-xl border hover:border-current" href={"/1/1"}>
+      <h4 className="font-medium mb-2 line-clamp-1">
+        Proposal#1 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+        incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+        exercitation ullamco laboris.
+      </h4>
       <p className="line-clamp-2">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
         labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
