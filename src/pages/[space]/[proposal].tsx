@@ -1,14 +1,13 @@
 import { BlitzPage } from "@blitzjs/next"
-import Layout from "src/core/layouts/Layout"
 import Image from "next/image"
-import { ProposalCard } from "src/core/components/ProposalCard"
+import Layout from "src/core/layouts/Layout"
 
-const Home: BlitzPage = () => {
+const Proposal: BlitzPage = () => {
   const name = "Space"
   const icon = "https://cdn.stamp.fyi/space/stgdao.eth?s=164"
   const id = "1"
   return (
-    <Layout title="Home">
+    <Layout title={`Proposal#1 | ${name}`}>
       <div className="max-w-screen-lg mx-auto flex flex-wrap justify-between gap-8 items-start">
         <div className="border rounded-xl p-8 w-[260px] text-center">
           <Image src={icon} width={82} height={82} className="rounded-full mx-auto" alt="icon" />
@@ -58,4 +57,4 @@ const Home: BlitzPage = () => {
   )
 }
 
-export default Home
+export default Proposal

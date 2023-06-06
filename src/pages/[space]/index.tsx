@@ -3,16 +3,24 @@ import Layout from "src/core/layouts/Layout"
 import Image from "next/image"
 import { ProposalCard } from "src/core/components/ProposalCard"
 
-const Home: BlitzPage = () => {
+const Space: BlitzPage = () => {
   const name = "Space"
   const icon = "https://cdn.stamp.fyi/space/stgdao.eth?s=164"
   const id = "1"
   return (
-    <Layout title="Home">
+    <Layout title={name}>
       <div className="max-w-screen-lg mx-auto flex flex-wrap justify-between gap-8 items-start">
         <div className="border rounded-xl p-8 w-[260px] text-center">
           <Image src={icon} width={82} height={82} className="rounded-full mx-auto" alt="icon" />
           <h3 className="my-4 font-medium text-lg">{name}</h3>
+          <a
+            href="1/create"
+            className="block my-2 border rounded-full hover:border-current py-2 mx-4"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Create a Proposal
+          </a>
           <a
             href="https://testnet.venomscan.com/"
             className="block my-2 border rounded-full hover:border-current py-2 mx-4"
@@ -43,4 +51,4 @@ const Home: BlitzPage = () => {
   )
 }
 
-export default Home
+export default Space
