@@ -63,3 +63,48 @@ model Token {
 // enum TokenType {
 //   RESET_PASSWORD
 // }
+
+model Dao {
+  id           Int        @id @default(autoincrement())
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  name         String
+  token        String
+  introduction String
+  avatar       String
+  proposal     Proposal[]
+}
+
+model Proposal {
+  id             Int      @id @default(autoincrement())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  creatorAddress String
+  title          String
+  content        String
+
+  dao    Dao      @relation(fields: [daoId], references: [id])
+  daoId  Int
+  option Option[]
+}
+
+model Option {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  content   String
+  votes     Int
+
+  proposal   Proposal @relation(fields: [proposalId], references: [id])
+  proposalId Int
+  vote       Vote[]
+}
+
+model Vote {
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  option      Option   @relation(fields: [optionId], references: [id])
+  optionId    Int
+  userAddress String
+}
