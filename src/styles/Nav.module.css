@@ -1,0 +1,12 @@
+.active::before {
+  /* floating point */
+  content: "";
+  display: block;
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  left: -14px;
+  top: calc(50% - 4px);
+  background: #60053b;
+  border-radius: 50%;
+}
