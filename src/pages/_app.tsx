@@ -2,6 +2,7 @@ import { ErrorFallbackProps, ErrorComponent, ErrorBoundary, AppProps } from "@bl
 import { AuthenticationError, AuthorizationError } from "blitz"
 import React from "react"
 import { withBlitz } from "src/blitz-client"
+import { VenomProvider } from "../core/services/venom"
 import "src/styles/globals.css"
 
 import "src/core/styles/index.css"
@@ -30,7 +31,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const getLayout = Component.getLayout || ((page) => page)
   return (
     <ErrorBoundary FallbackComponent={RootErrorFallback}>
-      {getLayout(<Component {...pageProps} />)}
+      <VenomProvider>{getLayout(<Component {...pageProps} />)}</VenomProvider>
     </ErrorBoundary>
   )
 }

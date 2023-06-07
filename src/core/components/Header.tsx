@@ -13,8 +13,8 @@ export function Header() {
       <div className="max-w-screen-lg mx-auto flex h-[100%] items-center justify-between">
         <h1 className="text-xl font-bold">Muksa</h1>
         <div>
-          {venom.isConnected ? (
-            <p>{trimAddr(venom.address!)}</p>
+          {venom.address ? (
+            <p>{trimAddr(venom.address)}</p>
           ) : (
             <button
               onClick={() => venom.connect()}
