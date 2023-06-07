@@ -51,7 +51,7 @@ export function Nav({ spaces }) {
           path={"/" + space.id}
           active={router.pathname.startsWith("/" + space.id)}
           name={space.name}
-          key={space.id}
+          key={"space-" + space.id}
         />
       ))}
       <NavItem

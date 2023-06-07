@@ -27,7 +27,7 @@ const Home: BlitzPage = () => {
       </div>
       <div className="max-w-screen-lg mx-auto mt-8 grid grid-cols-[repeat(auto-fill,_223px)] gap-4 justify-between">
         {daos.map((dao) => (
-          <DaoCard name={dao.name} icon={dao.avatar} id={dao.id.toString()} key={dao.id} />
+          <DaoCard name={dao.name} icon={dao.avatar} id={dao.id.toString()} key={"dao-" + dao.id} />
         ))}
       </div>
       <div className="max-w-screen-lg mx-auto mt-8 text-center">

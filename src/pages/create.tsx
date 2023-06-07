@@ -192,7 +192,7 @@ const Create: BlitzPage = () => {
                 alert("Unknow error happens, please try again or report to our team")
               })
           }}
-          // disabled={!token}
+          disabled={!token}
         >
           {token ? "Create" : "You have to deploy a token first"}
         </button>
