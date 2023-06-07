@@ -1,6 +1,6 @@
 import { ErrorFallbackProps, ErrorComponent, ErrorBoundary, AppProps } from "@blitzjs/next"
 import { AuthenticationError, AuthorizationError } from "blitz"
-import React from "react"
+import React, { Suspense } from "react"
 import { withBlitz } from "src/blitz-client"
 import { VenomProvider } from "../core/services/venom"
 import "src/styles/globals.css"
@@ -31,7 +31,9 @@ function MyApp({ Component, pageProps }: AppProps) {
   const getLayout = Component.getLayout || ((page) => page)
   return (
     <ErrorBoundary FallbackComponent={RootErrorFallback}>
-      <VenomProvider>{getLayout(<Component {...pageProps} />)}</VenomProvider>
+      <Suspense fallback={<div>Loading...</div>}>
+        <VenomProvider>{getLayout(<Component {...pageProps} />)}</VenomProvider>
+      </Suspense>
     </ErrorBoundary>
   )
 }

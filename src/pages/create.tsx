@@ -4,6 +4,9 @@ import Layout from "src/core/layouts/Layout"
 import { deployTip3 } from "src/core/services/deployTip3"
 import { VenomContext } from "src/core/services/venom"
 import Image from "next/image"
+import { useMutation } from "@blitzjs/rpc"
+import createDao from "src/mutations/createDao"
+import { useRouter } from "next/router"
 
 const Create: BlitzPage = () => {
   const [name, setName] = useState("")
@@ -15,6 +18,8 @@ const Create: BlitzPage = () => {
   const [supply, setSupply] = useState<number | null>(null)
   const [deploying, setDeploying] = useState(false)
   const venom = useContext(VenomContext)
+  const [createDaoMutation] = useMutation(createDao)
+  const router = useRouter()
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -156,6 +161,7 @@ const Create: BlitzPage = () => {
                     })
                     .catch((err) => {
                       setDeploying(false)
+                      console.error(err)
                       alert("Unknow error happens, please try again or report to our team")
                     })
                 }}
@@ -171,8 +177,22 @@ const Create: BlitzPage = () => {
             "py-2 px-16 rounded-full border mt-8 mx-auto block " +
             (token ? "hover:border-current" : "")
           }
-          onClick={() => {}}
-          disabled={!token}
+          onClick={() => {
+            createDaoMutation({
+              name,
+              avatar,
+              introduction,
+              token,
+            })
+              .then(({ id }) => {
+                return router.push(`/${id}`)
+              })
+              .catch((err) => {
+                console.error(err)
+                alert("Unknow error happens, please try again or report to our team")
+              })
+          }}
+          // disabled={!token}
         >
           {token ? "Create" : "You have to deploy a token first"}
         </button>
