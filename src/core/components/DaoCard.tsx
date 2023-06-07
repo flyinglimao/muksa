@@ -12,7 +12,13 @@ export function DaoCard({ name, icon, id }: Props) {
       className="block border rounded-xl p-8 w-[223px] text-center hover:border-current"
       href={`/${id}`}
     >
-      <Image src={icon} width={82} height={82} className="rounded-full mx-auto" alt="icon" />
+      <Image
+        src={icon}
+        width={82}
+        height={82}
+        className="rounded-full mx-auto object-cover w-[82px] h-[82px]"
+        alt="icon"
+      />
       <h3 className="py-4 font-medium text-lg">{name}</h3>
       <button className="py-2 w-[100px] rounded-full border hover:border-current">Join</button>
     </a>

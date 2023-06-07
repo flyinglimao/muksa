@@ -3,11 +3,12 @@ import { useContext, useEffect, useState } from "react"
 import Layout from "src/core/layouts/Layout"
 import { deployTip3 } from "src/core/services/deployTip3"
 import { VenomContext } from "src/core/services/venom"
+import Image from "next/image"
 
 const Create: BlitzPage = () => {
   const [name, setName] = useState("")
   const [introduction, setIntroduction] = useState("")
-  const [avatar, setAvatar] = useState("")
+  const [avatar, setAvatar] = useState("/default-dao-avatar.png")
   const [token, setToken] = useState("")
   const [tokenName, setTokenName] = useState("")
   const [tokenSymbol, setTokenSymbol] = useState("")
@@ -58,7 +59,23 @@ const Create: BlitzPage = () => {
         </label>
         <label className="flex flex-col items-start mt-4">
           Avatar
-          <input onChange={handleAvatarChange} type="file" className="mt-2" />
+          <div className="mt-2">
+            <div className="mr-8 inline-block align-middle">
+              <Image
+                src={avatar}
+                width={128}
+                height={128}
+                alt={"Avatar"}
+                className="border rounded-full object-cover w-[128px] h-[128px]"
+              />
+            </div>
+            <input
+              onChange={handleAvatarChange}
+              type="file"
+              className="align-middle"
+              accept="image/*"
+            />
+          </div>
         </label>
         <label className="flex flex-col items-start mt-4">
           Introduction

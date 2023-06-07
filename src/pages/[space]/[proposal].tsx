@@ -10,7 +10,13 @@ const Proposal: BlitzPage = () => {
     <Layout title={`Proposal#1 | ${name}`}>
       <div className="max-w-screen-lg mx-auto flex flex-wrap justify-between gap-8 items-start">
         <div className="border rounded-xl p-8 w-[260px] text-center">
-          <Image src={icon} width={82} height={82} className="rounded-full mx-auto" alt="icon" />
+          <Image
+            src={icon}
+            width={82}
+            height={82}
+            className="rounded-full mx-auto  object-cover w-[82px] h-[82px]"
+            alt="icon"
+          />
           <h3 className="my-4 font-medium text-lg">{name}</h3>
           <a
             href="https://testnet.venomscan.com/"

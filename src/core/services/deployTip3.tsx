@@ -26,7 +26,7 @@ export async function deployTip3({
     tvc: TokenRootCode,
     publicKey: publicKey,
     initParams: {
-      deployer_: new Address("0:0000000000000000000000000000000000000000000000000000000000000000"), // this field should be zero address if deploying with public key (see source code)
+      deployer_: new Address("0:0000000000000000000000000000000000000000000000000000000000000000"),
       randomNonce_: (Math.random() * 64000) | 0,
       rootOwner_: address,
       name_: name,
