@@ -4,6 +4,9 @@ import { useRouter } from "next/router"
 
 import NavModule from "../../styles/Nav.module.css"
 import Image from "next/image"
+import { useContext } from "react"
+import { LocalDataContext } from "../services/localData"
+import { useParam } from "@blitzjs/next"
 
 function NavItem({
   avatar,
@@ -40,24 +43,26 @@ function NavItem({
   )
 }
 
-export function Nav({ spaces }) {
+export function Nav() {
+  const { joinedDaos } = useContext(LocalDataContext)
   const router = useRouter()
+  const pathStructure = router.asPath.split("/")
   return (
     <nav className="w-[60px] h-[100vh] fixed top-0 left-0 bg-white border-r-2 pt-[16px] overflow-y-auto scrollbar-none">
       <NavItem avatar={homeIcon.src} path="/" active={router.pathname === "/"} name="Home Page" />
-      {spaces.map((space) => (
+      {joinedDaos.map((dao) => (
         <NavItem
-          avatar={space.avatar}
-          path={"/" + space.id}
-          active={router.pathname.startsWith("/" + space.id)}
-          name={space.name}
-          key={"space-" + space.id}
+          avatar={dao.avatar}
+          path={"/" + dao.id}
+          active={pathStructure[1] === dao.id.toString()}
+          name={dao.name}
+          key={"space-" + dao.id}
         />
       ))}
       <NavItem
         avatar={plusIcon.src}
         path="/create"
-        active={router.pathname.startsWith("/create")}
+        active={pathStructure[1] === "create"}
         name="Create new DAO"
         className="mt-[16px]"
       />

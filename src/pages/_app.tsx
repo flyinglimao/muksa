@@ -6,6 +6,7 @@ import { VenomProvider } from "../core/services/venom"
 import "src/styles/globals.css"
 
 import "src/core/styles/index.css"
+import { LocalDataProvider } from "src/core/services/localData"
 
 function RootErrorFallback({ error }: ErrorFallbackProps) {
   if (error instanceof AuthenticationError) {
@@ -32,7 +33,9 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ErrorBoundary FallbackComponent={RootErrorFallback}>
       <Suspense fallback={<div>Loading...</div>}>
-        <VenomProvider>{getLayout(<Component {...pageProps} />)}</VenomProvider>
+        <LocalDataProvider>
+          <VenomProvider>{getLayout(<Component {...pageProps} />)}</VenomProvider>
+        </LocalDataProvider>
       </Suspense>
     </ErrorBoundary>
   )

@@ -15,7 +15,7 @@ const Layout: BlitzLayout<{ title?: string; children?: React.ReactNode }> = ({
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Header />
-      <Nav spaces={[]} />
+      <Nav />
       <div className="py-12">{children}</div>
     </>
   )
