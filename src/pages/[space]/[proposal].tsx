@@ -141,7 +141,10 @@ const Proposal: BlitzPage = () => {
           </div>
           <div className="flex flex-col gap-4 my-2">
             {proposal?.option?.map((option, idx) => {
-              const share = Number((option.votes * BigInt(10000)) / totalVotes) / 100
+              const share =
+                totalVotes > BigInt(0)
+                  ? Number((option.votes * BigInt(10000)) / totalVotes) / 100
+                  : 0
 
               return (
                 <button
