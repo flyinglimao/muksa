@@ -1,9 +1,9 @@
 import { resolver } from "@blitzjs/rpc"
 import db from "db"
 import { Vote } from "../schemas"
-import { EverscaleStandaloneClient } from "everscale-standalone-client"
-import { Address, ProviderRpcClient } from "everscale-inpage-provider"
-import { TokenRootAbi, TokenWalletAbi } from "src/core/services/deployTip3"
+// import { EverscaleStandaloneClient } from "everscale-standalone-client"
+// import { Address, ProviderRpcClient } from "everscale-inpage-provider"
+// import { TokenRootAbi, TokenWalletAbi } from "src/core/services/deployTip3"
 
 export default resolver.pipe(
   resolver.zod(Vote),
@@ -37,20 +37,20 @@ export default resolver.pipe(
     if (proposal.daoId !== dao.id) throw new Error("Invalid proposal")
     if (vote) throw new Error("Already voted")
 
-    const client = new ProviderRpcClient({
-      forceUseFallback: true,
-      fallback: () =>
-        EverscaleStandaloneClient.create({
-          connection: {
-            id: 1010,
-            group: "testnet",
-            type: "jrpc",
-            data: {
-              endpoint: "https://jrpc-testnet.venom.foundation/rpc",
-            },
-          },
-        }),
-    })
+    // const client = new ProviderRpcClient({
+    //   forceUseFallback: true,
+    //   fallback: () =>
+    //     EverscaleStandaloneClient.create({
+    //       connection: {
+    //         id: 1010,
+    //         group: "testnet",
+    //         type: "jrpc",
+    //         data: {
+    //           endpoint: "https://jrpc-testnet.venom.foundation/rpc",
+    //         },
+    //       },
+    //     }),
+    // })
 
     // get voting power
     // TODO: had some problem when using the following code
