@@ -68,6 +68,7 @@ const Space: BlitzPage = () => {
           ) : (
             proposals.map((proposal) => (
               <ProposalCard
+                daoId={proposal.daoId}
                 serial={proposal.serial}
                 title={proposal.title}
                 introduction={proposal.content}
