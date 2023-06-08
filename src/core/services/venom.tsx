@@ -9,6 +9,7 @@ type Venom = {
   address: string | null
   publicKey: string | null
   client: ProviderRpcClient | null
+  venom: VenomConnect | null
 }
 
 export const VenomContext = createContext<Venom>({
@@ -19,6 +20,7 @@ export const VenomContext = createContext<Venom>({
   address: null,
   publicKey: null,
   client: null,
+  venom: null,
 })
 
 export function VenomProvider({ children }: { children: ReactNode }) {
@@ -65,14 +67,13 @@ export function VenomProvider({ children }: { children: ReactNode }) {
         },
       },
     })
+    venom.checkAuth().catch(() => {})
     setVenom(venom)
-    console.log(venom)
     venom.on("connect", (client: ProviderRpcClient) => {
       setClient(client)
       setConnected(true)
-      console.log(client)
       client
-        .getProviderState()
+        ?.getProviderState()
         .then((state) => {
           setAddress(state.permissions.accountInteraction?.address.toString() || null)
           setPublicKey(state.permissions.accountInteraction?.publicKey.toString() || null)
@@ -89,6 +90,7 @@ export function VenomProvider({ children }: { children: ReactNode }) {
         address,
         publicKey,
         client,
+        venom,
       }}
     >
       {children}

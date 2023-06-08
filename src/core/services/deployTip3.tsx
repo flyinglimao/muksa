@@ -1,10 +1,13 @@
 import { Address, Contract, ProviderRpcClient, Transaction } from "everscale-inpage-provider"
 import TokenRootAbi from "./TokenRoot.abi.json"
+import TokenWalletAbi from "./TokenWallet.abi.json"
 import TokenRootCode from "./TokenRoot.tvc.base64.json"
 import TokenWalletCode from "./TokenWallet.tvc.base64.json"
 import BigNumber from "bignumber.js"
 
 const value = new BigNumber(5).shiftedBy(9).toFixed(0)
+
+export { TokenRootAbi, TokenWalletAbi }
 
 export async function deployTip3({
   publicKey,
@@ -44,6 +47,7 @@ export async function deployTip3({
   })
   const contract = new client.Contract(TokenRootAbi, expectedAddress)
   const stateInit = await client.getStateInit(TokenRootAbi, deployParams as any)
+
   const tx = await contract.methods
     .constructor({
       initialSupplyTo: address,

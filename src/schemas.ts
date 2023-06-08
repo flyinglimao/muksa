@@ -13,3 +13,12 @@ export const CreateProposal = z.object({
   options: z.array(z.string()),
   creatorAddress: z.string(),
 })
+export const Vote = z.object({
+  daoId: z.number(),
+  serial: z.number(),
+  publicKey: z.string(),
+  sig: z.string(),
+  optionId: z.number(),
+  address: z.string(),
+  tokenBalace: z.bigint(),
+})

@@ -1,22 +1,99 @@
 import { BlitzPage, ErrorComponent, useParams } from "@blitzjs/next"
-import { useQuery } from "@blitzjs/rpc"
+import { useMutation, useQuery } from "@blitzjs/rpc"
+import { Address } from "everscale-inpage-provider"
 import Image from "next/image"
-import { Fragment } from "react"
+import { Fragment, useContext, useEffect, useState } from "react"
+import { Modal } from "src/core/components/Modal"
 import Layout from "src/core/layouts/Layout"
+import { TokenRootAbi, TokenWalletAbi } from "src/core/services/deployTip3"
+import { VenomContext } from "src/core/services/venom"
 import getDao from "src/queries/getDao"
 import getProposal from "src/queries/getProposal"
+import BigNumber from "bignumber.js"
+import vote from "src/mutations/vote"
 
 const Proposal: BlitzPage = () => {
   const params = useParams("number")
+  const venom = useContext(VenomContext)
   const [{ dao }] = useQuery(getDao, params.space || 0)
-  const [proposal] = useQuery(getProposal, {
+  const [proposal, { refetch: refetchProposal }] = useQuery(getProposal, {
     daoId: params.space || 0,
     serial: params.proposal || 0,
   })
+  const [voteMutation] = useMutation(vote)
+  const [balance, setBalance] = useState("")
+  const [votingFor, setVotingFor] = useState<{ id: number; content: string } | null>(null)
+  const [loading, setLoading] = useState(false)
 
-  if (!dao) {
+  if (!dao || !proposal) {
     return <ErrorComponent statusCode={404} title={"DAO not found"} />
   }
+
+  async function voteFor(option: { id: number; content: string }) {
+    if (!venom.address) {
+      alert("Please connect your wallet first")
+      return
+    }
+    setVotingFor(option)
+    setLoading(true)
+    try {
+      const tokenAddress = new Address(dao!.token)
+      const tokenContract = new venom.client!.Contract(TokenRootAbi, tokenAddress)
+      const tokenWallet = (await tokenContract.methods
+        ?.walletOf?.({
+          answerId: 0,
+          walletOwner: venom.address,
+        } as never)
+        .call()) as any
+      if (!tokenWallet) return
+      const walletAddress = tokenWallet.value0._address
+      const contract = new venom.client!.Contract(TokenWalletAbi, new Address(walletAddress))
+      const contractState = await venom.client!.rawApi.getFullContractState({
+        address: walletAddress,
+      })
+      if (contractState.state) {
+        const result = (await contract.methods?.balance?.({ answerId: 0 } as never).call()) as any
+        const tokenBalance = result.value0
+        setBalance(tokenBalance)
+        setLoading(false)
+      } else {
+        setBalance("0")
+        setLoading(false)
+      }
+    } catch (err) {
+      console.error(err)
+      alert("Unknow error happens, please try again or report to our team")
+      setLoading(false)
+    }
+  }
+
+  async function confirmVote() {
+    if (!venom.publicKey || !votingFor || !dao || !proposal || !venom.address) return
+    const sig = await venom.client!.signData({
+      publicKey: venom.publicKey,
+      data: btoa(
+        `${venom.address} is voting for ${votingFor.content} in proposal#${proposal.serial} of ${dao.name}`
+      ),
+    })
+    voteMutation({
+      daoId: dao.id,
+      serial: proposal.serial,
+      optionId: votingFor.id,
+      address: venom.address,
+      publicKey: venom.publicKey,
+      sig: JSON.stringify(sig),
+      tokenBalace: BigInt(balance),
+    })
+      .then(() => {
+        return refetchProposal()
+      })
+      .catch((err) => {
+        console.error(err)
+        alert("Unknow error happens, please try again or report to our team")
+      })
+  }
+
+  const totalVotes = proposal?.option?.reduce((acc, cur) => acc + cur.votes, BigInt(0))
 
   return (
     <Layout title={`Proposal#${params.proposal} | ${dao.name}`}>
@@ -63,17 +140,65 @@ const Proposal: BlitzPage = () => {
             })}
           </div>
           <div className="flex flex-col gap-4 my-2">
-            {proposal?.option?.map((option, idx) => (
-              <button
-                className="w-full border rounded-full px-2 py-4 hover:border-current"
-                key={"option-" + option.id}
-              >
-                {option.content}
-              </button>
-            ))}
+            {proposal?.option?.map((option, idx) => {
+              const share = Number((option.votes * BigInt(10000)) / totalVotes) / 100
+
+              return (
+                <button
+                  className="relative w-full border rounded-full px-2 py-4 hover:border-current overflow-hidden"
+                  key={"option-" + option.id}
+                  onClick={() => voteFor(option)}
+                >
+                  <div
+                    className="block absolute bg-slate-200 h-full top-0 left-0 z-0"
+                    style={{ width: `${share}%` }}
+                  ></div>
+                  <span className="relative z-10">
+                    {option.content} ({share.toLocaleString("en", { maximumFractionDigits: 2 })}%)
+                  </span>
+                </button>
+              )
+            })}
+            <p className="text-sm text-slate-500 text-right">
+              Total Votes: {totalVotes.toString()}
+            </p>
           </div>
         </div>
       </div>
+      <Modal
+        onClose={() => {
+          setVotingFor(null)
+        }}
+        open={votingFor !== null && !loading}
+        title={"Confrim Vote to " + votingFor?.content}
+        content={`You have ${new BigNumber(balance).shiftedBy(
+          -9
+        )} tokens in your wallet, are you sure to vote for ${votingFor?.content}?`}
+        buttons={[
+          {
+            text: "Confirm",
+            onClick: () => {
+              confirmVote()
+                .then(() => {
+                  setVotingFor(null)
+                })
+                .catch((err) => {
+                  console.error(err)
+                  alert("Unknow error happens, please try again or report to our team")
+                })
+            },
+            className:
+              "bg-blue-100 text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500",
+          },
+          {
+            text: "Cancel",
+            onClick: () => {
+              setVotingFor(null)
+            },
+            className: "border-black",
+          },
+        ]}
+      />
     </Layout>
   )
 }

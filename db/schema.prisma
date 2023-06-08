@@ -96,7 +96,7 @@ model Option {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   content   String
-  votes     Int
+  votes     BigInt
 
   proposal   Proposal @relation(fields: [proposalId], references: [id])
   proposalId Int
