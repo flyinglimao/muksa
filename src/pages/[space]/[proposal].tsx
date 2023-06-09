@@ -19,6 +19,7 @@ const Proposal: BlitzPage = () => {
   const [proposal, { refetch: refetchProposal }] = useQuery(getProposal, {
     daoId: params.space || 0,
     serial: params.proposal || 0,
+    address: venom.address || undefined,
   })
   const [voteMutation] = useMutation(vote)
   const [balance, setBalance] = useState("")
@@ -94,6 +95,7 @@ const Proposal: BlitzPage = () => {
   }
 
   const totalVotes = proposal?.option?.reduce((acc, cur) => acc + cur.votes, BigInt(0))
+  const myVote = proposal?.option?.find((option) => option.vote.length > 0)?.vote[0]
 
   return (
     <Layout title={`Proposal#${params.proposal} | ${dao.name}`}>
@@ -148,15 +150,26 @@ const Proposal: BlitzPage = () => {
 
               return (
                 <button
-                  className="relative w-full border rounded-full px-2 py-4 hover:border-current overflow-hidden"
+                  className={
+                    "relative w-full border rounded-full px-2 py-4 overflow-hidden " +
+                    (myVote ? "" : "hover:border-current")
+                  }
                   key={"option-" + option.id}
                   onClick={() => voteFor(option)}
+                  disabled={!!myVote}
                 >
                   <div
-                    className="block absolute bg-slate-200 h-full top-0 left-0 z-0"
+                    className={
+                      "block absolute h-full top-0 left-0 z-0" +
+                      (myVote ? " bg-blue-200 " : " bg-slate-200")
+                    }
                     style={{ width: `${share}%` }}
                   ></div>
-                  <span className="relative z-10">
+                  <span
+                    className={
+                      "relative z-10 " + (myVote?.optionId === option.id ? "text-blue-800" : "")
+                    }
+                  >
                     {option.content} ({share.toLocaleString("en", { maximumFractionDigits: 2 })}%)
                   </span>
                 </button>

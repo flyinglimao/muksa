@@ -2,6 +2,7 @@ import { BlitzPage, ErrorComponent, useParams } from "@blitzjs/next"
 import { useMutation, useQuery } from "@blitzjs/rpc"
 import { useRouter } from "next/router"
 import { useContext, useEffect, useState } from "react"
+import { Modal } from "src/core/components/Modal"
 import Layout from "src/core/layouts/Layout"
 import { VenomContext } from "src/core/services/venom"
 import createProposal from "src/mutations/createProposal"
@@ -16,10 +17,6 @@ const CreateProposal: BlitzPage = () => {
   const [options, setOptions] = useState<string[]>([])
   const [{ dao }] = useQuery(getDao, params.space || 0)
   const [createProposalMutation] = useMutation(createProposal)
-
-  useEffect(() => {
-    if (!venom.address) venom.connect()
-  }, [venom])
 
   if (!params.space || !dao) {
     return <ErrorComponent statusCode={404} title={"DAO not found"} />
@@ -80,6 +77,29 @@ const CreateProposal: BlitzPage = () => {
           Create
         </button>
       </div>
+      <Modal
+        open={!venom.address}
+        title="Wallet Not Connected"
+        content={`To create a new proposal, please connect your wallet first`}
+        buttons={[
+          {
+            text: "Connect",
+            onClick: () => {
+              venom.connect()
+            },
+            className:
+              "bg-blue-100 text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500",
+          },
+          {
+            text: "Back to DAO",
+            onClick: async () => {
+              await router.push(`/${params.space}`)
+            },
+            className: "border-black",
+          },
+        ]}
+        onClose={() => {}}
+      />
     </Layout>
   )
 }
