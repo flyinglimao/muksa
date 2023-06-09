@@ -161,7 +161,7 @@ const Proposal: BlitzPage = () => {
                   <div
                     className={
                       "block absolute h-full top-0 left-0 z-0" +
-                      (myVote ? " bg-blue-200 " : " bg-slate-200")
+                      (myVote?.optionId === option.id ? " bg-blue-200 " : " bg-slate-200")
                     }
                     style={{ width: `${share}%` }}
                   ></div>
