@@ -7,6 +7,7 @@ import Image from "next/image"
 import { useMutation } from "@blitzjs/rpc"
 import createDao from "src/mutations/createDao"
 import { useRouter } from "next/router"
+import { Modal } from "src/core/components/Modal"
 
 const Create: BlitzPage = () => {
   const [name, setName] = useState("")
@@ -33,10 +34,6 @@ const Create: BlitzPage = () => {
   }
 
   useEffect(() => {
-    if (!venom.address) venom.connect()
-  }, [venom])
-
-  useEffect(() => {
     setTokenName(`${name} Token`)
     setTokenSymbol(
       (
@@ -50,9 +47,9 @@ const Create: BlitzPage = () => {
   }, [name])
 
   return (
-    <Layout title="Create a new Space">
+    <Layout title="Create a new DAO">
       <div className="max-w-screen-md mx-auto border rounded-xl p-8">
-        <h2 className="font-medium text-xl mb-4">Create a new Space</h2>
+        <h2 className="font-medium text-xl mb-4">Create a new DAO</h2>
         <label className="flex flex-col items-start mt-4">
           Name
           <input
@@ -130,12 +127,13 @@ const Create: BlitzPage = () => {
                 />
               </label>
               <p className="mt-2 text-sm text-slate-500">
-                * It will execute 2 transactions, first for creating space, second for deployment.
+                * It will execute 2 transactions, first for creating storage, second for code
+                deployment.
               </p>
               <button
                 className="py-2 px-4 rounded-xl border hover:border-current focus:border-current mt-2 w-full"
                 onClick={() => {
-                  if (!venom.publicKey || !venom.address || !venom.client) return
+                  if (deploying || !venom.publicKey || !venom.address || !venom.client) return
                   if (
                     !tokenName ||
                     !tokenSymbol ||
@@ -165,8 +163,9 @@ const Create: BlitzPage = () => {
                       alert("Unknow error happens, please try again or report to our team")
                     })
                 }}
+                disabled={deploying}
               >
-                {deploying ? "Deploy......" : "Deploy"}
+                {deploying ? "Deploying......" : "Deploy"}
               </button>
             </div>
           )}
@@ -197,6 +196,29 @@ const Create: BlitzPage = () => {
           {token ? "Create" : "You have to deploy a token first"}
         </button>
       </div>
+      <Modal
+        open={!venom.address}
+        title="Wallet Not Connected"
+        content={`To create a new DAO, please connect your wallet first`}
+        buttons={[
+          {
+            text: "Connect",
+            onClick: () => {
+              venom.connect()
+            },
+            className:
+              "bg-blue-100 text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500",
+          },
+          {
+            text: "Back to Home",
+            onClick: async () => {
+              await router.push("/")
+            },
+            className: "border-black",
+          },
+        ]}
+        onClose={() => {}}
+      />
     </Layout>
   )
 }
