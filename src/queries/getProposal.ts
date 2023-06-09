@@ -5,7 +5,7 @@ type Props = {
   serial: number
   address?: string
 }
-export default async function getProposal({ daoId, serial, address }: Props) {
+export default async function getProposal({ daoId, serial, address = "unset" }: Props) {
   return await db.proposal.findUnique({
     where: {
       ProposalSerial: {
