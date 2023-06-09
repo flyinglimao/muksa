@@ -35,9 +35,9 @@ To modify Muksa, follow these steps:
 
 4. Start Muksa locally, run the following command:
 
-    ```bash
-    npm run dev
-    ```
+   ```bash
+   yarn dev
+   ```
 
 This will start the development server and make Muksa accessible at [http://localhost:3000](http://localhost:3000).
 
